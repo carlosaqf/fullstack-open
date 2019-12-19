@@ -1,5 +1,6 @@
-import React from 'react'
+import React, {useState, useEffect } from 'react'
 import Note from './Components/Note'
+import axios from 'axios'
 
 export const notes = [
     {
@@ -22,17 +23,70 @@ export const notes = [
     }
 ]
 
+
 const AppTwo = ({ notes }) => {
 
-    const rows = () => notes.map(note =>
+    const rows = () => testnotes.map(note =>
         <Note
             key={note.id}
             note={note}
         />    
     )
+
+    const [testnotes, setNotes] = useState(notes)
+    const [newNote, setNewNote] = useState('')
+    const [showAll, setShowAll] = useState(true)
+
+    const handleClick = () => {
+
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        const noteObject = {
+            content: newNote,
+            date: new Date(),
+            important: Math.random() > 0.5 
+        }
+
+        axios.post('http://localhost:3001/notes', noteObject)
+             .then(response => {
+                 console.log(response)
+                 setNotes(testnotes.concat(response.data))
+                 setNewNote('')
+             })
+    }
+
+    const handleChange = (e) => {
+        setNewNote(e.target.value)
+    }
+
+    useEffect(() => {
+        console.log('effect')
+        axios
+            .get('http://localhost:3001/notes')
+            .then(response => {
+                console.log('promise fulfilled')
+                setNotes(response.data)
+            })
+    }, [])
+
+    console.log('render', testnotes.length, 'notes')
     return(
         <div>
             <h1>Notes</h1>
+            <form onSubmit={handleSubmit}>
+                <input 
+                    onChange={handleChange}
+                    value={newNote}
+                />
+                <input
+                    type='submit'
+                    value='Submit'
+                />
+            </form>
+            <button onClick={handleClick}>Show/Hide</button>
+
             <ul>
                 {rows()}
             </ul>

@@ -7,7 +7,7 @@ import AnecdotesApp from './anecdotes/AnecdotesApp'
 import AppTwo from './part2/AppTwo'
 import { notes } from './part2/AppTwo'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<AppTwo notes={notes}/>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
